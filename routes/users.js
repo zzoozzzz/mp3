@@ -61,13 +61,15 @@ router.get('/', async (req, res) => {
     // 6️⃣ count 
     if (req.query.count === "true") {
       const count = await User.countDocuments(query);
-      // 
-      return res.status(200).json({ message: "OK", data: count });
+      if (count === 0) {
+      return res.status(404).json({ message: "User not found", data: null });
+    }
+    return res.status(200).json({ message: "OK", data: count });
     }
 
     // return null when no result
     if (!result || result.length === 0) {
-      return res.status(200).json({ message: "OK", data: [] });
+      return res.status(404).json({ message: "User not found", data: null });
     }
 
     res.status(200).json({ message: "OK", data: result });
