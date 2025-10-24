@@ -1,5 +1,6 @@
 // ===== routes/users.js =====
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
 const Task = require('../models/task');
@@ -106,6 +107,9 @@ router.post('/', async (req, res) => {
 // ---------- GET /api/users/:id ----------
 router.get('/:id', async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({ message: "User not found", data: null });
+    }
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found", data: null });
@@ -119,6 +123,9 @@ router.get('/:id', async (req, res) => {
 // ---------- PUT /api/users/:id ----------
 router.put('/:id', async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({ message: "User not found", data: null });
+    }
     const { name, email, pendingTasks } = req.body;
 
     // check require
@@ -165,6 +172,9 @@ router.put('/:id', async (req, res) => {
 // ---------- DELETE /api/users/:id ----------
 router.delete('/:id', async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({ message: "User not found", data: null });
+    }
     const cleanId = req.params.id.trim();
 
     // find the user
